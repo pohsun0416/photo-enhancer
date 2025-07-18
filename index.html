@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>照片畫質提升</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>照片畫質提升工具</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required><br><br>
+        <button type="submit">上傳並提升畫質</button>
+    </form>
+
+    <div id="results" style="display:none;">
+        <h2>前後對比圖</h2>
+        <div class="image-container">
+            <div>
+                <p>原圖</p>
+                <img id="original" width="300">
+            </div>
+            <div>
+                <p>提升後</p>
+                <img id="enhanced" width="300">
+                <a id="download-link" download="enhanced.jpg">下載圖片</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('upload-form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const response = await fetch('/upload', { method: 'POST', body: formData });
+            const data = await response.json();
+
+            document.getElementById('original').src = data.original;
+            document.getElementById('enhanced').src = data.enhanced;
+            document.getElementById('download-link').href = data.enhanced;
+            document.getElementById('results').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
